@@ -1,4 +1,4 @@
-# Gashgiran Souvenir — Phase 1 Frontend
+# Gashgiran Souvenir 
 
 Plain HTML/CSS/JS single-page app (hash-based routing, no build step, no
 dependencies to install).

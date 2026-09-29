@@ -68,6 +68,7 @@ function fmt(n){return 'PKR '+n.toLocaleString();}
 
 /* ---------- ROUTER ---------- */
 function route(){
+  clearInterval(window._heroTimer);
   const hash=location.hash||'#/';
   const [path,query]=hash.split('?');
   const app=document.getElementById('app');
@@ -92,6 +93,9 @@ function route(){
   renderCartCount();
   bindDynamic();
   initReveal();
+  heroInit();
+  initCounters();
+  bindHomeTabs();
 }
 const revealObserver=new IntersectionObserver(entries=>{
   entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revealObserver.unobserve(e.target);}});
@@ -106,57 +110,182 @@ document.addEventListener('click',e=>{
   if(dd && !dd.contains(e.target)) dd.classList.remove('open');
 });
 
+/* ---------- HOME PAGE DATA ---------- */
+// Hero slides: replace these JPGs in assets/hero/ with your own photos (same file names).
+const HERO_SLIDES=['assets/hero/mot1.jpg','assets/hero/mot3.jpg'];
+const HOME_CATS=[
+ {name:'H oney & Salajeet',img:'assets/cat/honey.jfif',link:'  #/shop?ca t=Honey%20%26%20Salajeet'},
+ {name:'Dried Fruit & Nuts',img:'assets/cat/dryfruit.webp',link:'#/shop?cat=Dried%20Fruit%  20%26%20Nuts'},
+ {name:'Herbal Tea',img:'assets/cat/herbaltea.jpg',link:'#/shop?cat=Herbal%20Tea'},
+ {name:'Fresh Produce',img:'assets/cat/fresproduct.jfif',link:'#/shop?cat=Fresh%20Seasonal%20Produce'},
+ {name:'Gift Boxes',img:'assets/cat/gift.jpg',link:'#/gift-boxes'},
+ {name:'Corporate Gifting',img:'assets/cat/corporategift.jfif',link:'#/corporate-gifting'},
+];
+const WHY_POINTS=[
+ ['🏔️','Direct from Hunza','We buy straight from growers and harvesters in Hunza — no middlemen, full traceability from orchard to jar.'],
+ ['🍯','Small-Batch Freshness','Honey, herbs and dried fruit are packed in small batches so what reaches you is fresh, not warehouse-aged.'],
+ ['🎁','Gift-Ready Packaging','From the Mountain Box to the Heritage Collection — beautifully packed and ready to give.'],
+ ['🤝','Fair & Transparent','Fair prices for growers, honest prices for you, and a QR origin story on every pack.'],
+];
+const PROCESS_STEPS=[
+ ['01','Harvest','Honey, herbs and fruit are collected in season from Hunza\'s meadows and terraced orchards.'],
+ ['02','Selection','Every batch is hand-checked. Only produce that meets our standard moves forward.'],
+ ['03','Small-Batch Processing','Sun-drying, straining and blending are done in small runs to protect natural quality.'],
+ ['04','Packing','Products are sealed, labelled with origin details and packed into jars, pouches or gift boxes.'],
+ ['05','Dispatch','Orders go out quickly, with a confirmation on email and an optional WhatsApp update.'],
+ ['06','Delivery & Support','Cash on Delivery, wallet, bank transfer or card — and real people on WhatsApp if you need help.'],
+];
+// Facts about the store (not performance claims) — safe to show; update if the range changes.
+const HOME_STATS=[[8,'','Core Products'],[3,'','Gift Box Tiers'],[5,'','Ways to Pay'],[100,'%','Hunza-Sourced']];
+// SAMPLE REVIEWS — replace with real customer reviews before launch, or set SHOW_REVIEWS to false.
+const SHOW_REVIEWS=true;
+const REVIEWS=[
+ ['A','Ayesha K.','Customer','The honey tastes like real mountain honey. Packaging felt like a proper gift.'],
+ ['H','Hamza M.','Customer','Ordered the Hunza Collection for family abroad. Delivery was quick and everything arrived intact.'],
+ ['S','Sara T.','Customer','Loved the dried apricots and wild thyme tea. Easy ordering on WhatsApp too.'],
+ ['R','Rehan A.','Corporate client','We used the Heritage Collection for client gifts — presentation was excellent.'],
+];
+const HOME_FAQS=[
+ ['How does ordering work?','Add products to your cart and check out with Cash on Delivery, JazzCash / EasyPaisa, bank transfer or card — or choose "Order via WhatsApp" and confirm everything in chat.'],
+ ['How long does delivery take?','Domestic orders typically arrive within 3–5 business days. International delivery times depend on destination and are shown at checkout.'],
+ ['Are your products really from Hunza?','Yes. Everything is sourced directly from growers and harvesters in Hunza, Gilgit-Baltistan, and packs carry origin details.'],
+ ['How should I store honey and dried fruit?','Keep them in a cool, dry place away from direct sunlight. Natural crystallization in honey is normal — warm the jar gently in water to soften it.'],
+ ['Do you offer corporate or bulk gifting?','Yes. Our Heritage Collection is built for corporate gifting, and we quote bulk orders by quantity and timeline. Use the Corporate Gifting page to request a quote.'],
+ ['What is your return policy for perishables?','Perishable items like honey and fresh fruit follow different return terms from dry goods. See Shipping & Returns for details.'],
+];
+
 /* ---------- PAGE BUILDERS ---------- */
 function Home(){
+ const tabs=['Featured',...CATS.slice(1)];
+ const featured=PRODUCTS.filter(p=>p.stock!=='out').slice(0,4);
+ const marquee=[...HOME_CATS,...HOME_CATS].map(c=>`<a class="catcard" href="${c.link}" style="background-image:url('${c.img}')"><span>${c.name}</span></a>`).join('');
  return `
- <section class="hero"><div class="container herogrid">
-   <div>
-     <span class="badge">100% Hunza-sourced</span>
-     <h1>A taste of Hunza, straight from the mountains.</h1>
-     <p>Honey, herbs, dried fruit and gift-ready collections — sourced with authenticity and traceability, straight from the orchards of Hunza.</p>
+ <section class="hero" id="hero">
+   <div class="hero-track" id="heroTrack">${HERO_SLIDES.map(s=>`<div class="hero-slide" style="background-image:url('${s}')"></div>`).join('')}</div>
+   <div class="hero-overlay"></div>
+   <div class="container hero-content">
+     <span class="kicker">GASHGIRAN SOUVENIR</span>
+     <h1>Taste the mountains of Hunza.</h1>
+     <p>Honey, herbs, dried fruit and gift-ready collections — sourced straight from the orchards and meadows of Hunza, and delivered to your door.</p>
      <div class="ctas">
-       <button class="pill pill-primary" onclick="location.hash='#/shop'">Shop the Harvest</button>
-       <button class="pill pill-outline" onclick="location.hash='#/our-story'">Our Story</button>
-     </div>
-     <div class="trustrow">
-       <span class="badge">Small-batch</span><span class="badge">Gift-ready</span><span class="badge">Traceable sourcing</span>
+       <button class="pill pill-primary" onclick="location.hash='#/shop'">Shop Products</button>
+       <a class="pill pill-glass" href="https://wa.me/923000000000" target="_blank" rel="noopener">Order on WhatsApp</a>
      </div>
    </div>
-   <img class="herologo" src="assets/logo.jpeg" alt="Gashgiran Souvenir">
+   <button class="hero-arrow prev" aria-label="Previous slide">‹</button>
+   <button class="hero-arrow next" aria-label="Next slide">›</button>
+   <div class="hero-dots">${HERO_SLIDES.map((_,i)=>`<button class="hero-dot" aria-label="Slide ${i+1}"></button>`).join('')}</div>
+ </section>
+
+ <section class="pad cats reveal"><div class="container">
+   <div class="sectionhead"><span class="eyebrow">Product Categories</span><h2>Mountain Harvests, Curated for Every Table</h2><p>Slide through our core categories below. Click any category to browse products.</p></div>
+ </div>
+ <div class="marquee"><div class="marquee-track">${marquee}</div></div>
+ </section>
+
+ <section class="pad why reveal"><div class="container">
+   <div class="whygrid">
+     <div>
+       <span class="eyebrow">/ Why Gashgiran Souvenir?</span>
+       <h2>Why choose us?</h2>
+       <p class="lead">Built for people who want the real taste of Hunza — fresh, traceable, fairly priced and beautifully packed.</p>
+       <div class="whyimg" style="background-image:url('assets/wy.jpg')"></div>
+       <div class="ctas"><button class="pill pill-primary" onclick="location.hash='#/shop'">Explore Products</button><button class="pill pill-outline" onclick="location.hash='#/our-story'">Our Story</button></div>
+     </div>
+     <div class="whylist">${WHY_POINTS.map(w=>`<div class="whyitem"><div class="whyicon">${w[0]}</div><div><h3>${w[1]}</h3><p>${w[2]}</p></div></div>`).join('')}</div>
+   </div>
  </div></section>
 
- <section class="origin reveal"><div class="container origingrid">
-   <div>
-     <h2 style="color:var(--green-deep)">From Hunza's orchards to your table</h2>
-     <p>For generations, families across the Hunza valley have harvested honey, herbs and fruit from terraced orchards beneath Rakaposhi. Gashgiran works directly with these growers — no middlemen, full traceability, honest pricing.</p>
-     <p class="quote">"Every jar carries the story of the mountain it came from."</p>
-   </div>
-   <div class="mapcard">
-     <h4 style="color:#fff">Meet Gashgiran — Origin Map</h4>
-     <div class="pin"><span class="leaf">🍃</span> Rakaposhi — orchard highlands</div>
-     <div class="pin"><span class="leaf">🍃</span> Karimabad — honey & herb collection</div>
-     <div class="pin"><span class="leaf">🍃</span> Altit — heritage fruit terraces</div>
-     <p style="font-size:12px;color:#cfe0d0;margin-top:14px;">📱 Scan the QR on your packaging to read the full origin story.</p>
-   </div>
- </div></section>
-
- <section class="pad reveal" style="background:var(--green-pale)"><div class="container">
-   <div class="sectionhead"><h2 style="color:var(--green-deep)">Shop the Harvest</h2><p>Eight core products, hand-picked from the mountain.</p></div>
-   <div class="grid">${PRODUCTS.map(ProductCard).join('')}</div>
+ <section class="pad featured reveal" style="background:var(--green-pale)"><div class="container">
+   <div class="sectionhead"><span class="eyebrow">Products</span><h2>Featured Products from the Mountains</h2><p>A curated selection of our most loved products.</p></div>
+   <div class="filters center" id="hometabs">${tabs.map((t,i)=>`<button class="fpill ${i===0?'active':''}" data-tab="${t}">${t}</button>`).join('')}</div>
+   <div class="grid" id="homegrid">${featured.map(ProductCard).join('')}</div>
+   <div style="text-align:center;margin-top:28px;"><button class="pill pill-dark" onclick="location.hash='#/shop'">View All Products</button></div>
  </div></section>
 
  <section class="pad reveal"><div class="container">
-   <div class="sectionhead"><h2 style="color:var(--green-deep)">Gift Boxes</h2><p>Three tiers, built for every kind of gifting.</p></div>
+   <div class="sectionhead"><span class="eyebrow">Gift Boxes</span><h2>Gift Boxes for Every Occasion</h2><p>Three tiers, built for every kind of gifting.</p></div>
    <div class="giftgrid">${GIFTBOXES.map(GiftCard).join('')}</div>
  </div></section>
 
- <div class="ctaband reveal"><div class="container">
+ <section class="pad process reveal"><div class="container">
+   <div class="sectionhead"><span class="eyebrow">Process</span><h2>From Hunza to Your Door in 6 Steps</h2><p>Six transparent steps from harvest to delivery.</p></div>
+   <div class="processgrid">${PROCESS_STEPS.map(s=>`<div class="card stepcard"><div class="stepnum">${s[0]}</div><h3>${s[1]}</h3><p>${s[2]}</p></div>`).join('')}</div>
+ </div></section>
+
+ <section class="stats reveal"><div class="container statsgrid">
+   ${HOME_STATS.map(s=>`<div class="stat"><div class="statnum"><span class="count" data-target="${s[0]}">0</span>${s[1]||'+'}</div><div class="statlabel">${s[2]}</div></div>`).join('')}
+ </div></section>
+
+ ${SHOW_REVIEWS?`<section class="pad reveal"><div class="container">
+   <div class="sectionhead"><span class="eyebrow">Testimonials</span><h2>What Our Customers Say</h2></div>
+   <div class="reviewgrid">${REVIEWS.map(r=>`<div class="card review"><div class="avatar">${r[0]}</div><h3>${r[1]}</h3><div class="role">${r[2]}</div><p>${r[3]}</p></div>`).join('')}</div>
+ </div></section>`:''}
+
+ <section class="pad faqsec reveal" style="background:var(--green-pale)"><div class="container" style="max-width:820px;">
+   <div class="sectionhead"><span class="eyebrow">FAQ</span><h2>Frequently Asked Questions</h2><p>Everything you need to know about ordering, delivery and our products.</p></div>
+   ${HOME_FAQS.map(f=>`<details class="faqitem"><summary>${f[0]}</summary><p>${f[1]}</p></details>`).join('')}
+ </div></section>
+
+ <div class="ctaband reveal" style="background-image:linear-gradient(rgba(10,38,20,.86),rgba(10,38,20,.86)),url('assets/hero/hero4.jpg');"><div class="container">
    <h2>Ready for a taste of Hunza?</h2>
-   <p style="max-width:40ch;margin:0 auto 18px;color:#cfe0d0;">Small-batch, traceable, gift-ready — order today.</p>
-   <button class="pill pill-primary" onclick="location.hash='#/shop'">Shop Now</button>
+   <p style="max-width:44ch;margin:0 auto 22px;color:#d9e8db;">Place your order in minutes, or chat with us on WhatsApp — we'll help you choose.</p>
+   <div class="ctas" style="justify-content:center;"><button class="pill pill-primary" onclick="location.hash='#/shop'">Place an Order</button><a class="pill pill-glass" href="https://wa.me/923000000000" target="_blank" rel="noopener">Chat on WhatsApp</a></div>
  </div></div>
  `;
 }
+
+/* ---------- HOME INTERACTIONS ---------- */
+function heroInit(){
+  const hero=document.getElementById('hero'); if(!hero) return;
+  const track=document.getElementById('heroTrack');
+  const slides=[...hero.querySelectorAll('.hero-slide')], dots=[...hero.querySelectorAll('.hero-dot')];
+  const n=slides.length; let i=0;
+  function go(k){
+    i=(k+n)%n; track.style.transform=`translateX(-${i*100}%)`;
+    slides.forEach((s,j)=>s.classList.toggle('active',j===i));
+    dots.forEach((d,j)=>d.classList.toggle('active',j===i));
+  }
+  const stop=()=>clearInterval(window._heroTimer);
+  const start=()=>{stop();window._heroTimer=setInterval(()=>go(i+1),5500);};
+  hero.querySelector('.prev').onclick=()=>{go(i-1);start();};
+  hero.querySelector('.next').onclick=()=>{go(i+1);start();};
+  dots.forEach((d,j)=>d.onclick=()=>{go(j);start();});
+  let x0=null;
+  hero.addEventListener('pointerdown',e=>{if(e.target.closest('button,a'))return;x0=e.clientX;});
+  hero.addEventListener('pointerup',e=>{
+    if(x0===null)return; const dx=e.clientX-x0; x0=null;
+    if(Math.abs(dx)>50){go(dx<0?i+1:i-1);start();}
+  });
+  hero.addEventListener('mouseenter',stop); hero.addEventListener('mouseleave',start);
+  go(0); start();
+}
+function initCounters(){
+  const els=document.querySelectorAll('.count'); if(!els.length) return;
+  const io=new IntersectionObserver(entries=>entries.forEach(en=>{
+    if(!en.isIntersecting) return; io.unobserve(en.target);
+    const el=en.target, target=+el.dataset.target, t0=performance.now(), dur=1400;
+    (function tick(t){
+      const p=Math.min((t-t0)/dur,1), e=1-Math.pow(1-p,3);
+      el.textContent=Math.round(target*e);
+      if(p<1) requestAnimationFrame(tick);
+    })(t0);
+  }),{threshold:.4});
+  els.forEach(el=>io.observe(el));
+}
+function bindHomeTabs(){
+  const tabs=document.getElementById('hometabs'); if(!tabs) return;
+  tabs.querySelectorAll('.fpill').forEach(btn=>btn.onclick=()=>{
+    tabs.querySelectorAll('.fpill').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const t=btn.dataset.tab;
+    const list=t==='Featured'?PRODUCTS.filter(p=>p.stock!=='out').slice(0,4):PRODUCTS.filter(p=>p.cat===t);
+    const g=document.getElementById('homegrid');
+    g.innerHTML=list.map(ProductCard).join('');
+    g.classList.remove('swap'); void g.offsetWidth; g.classList.add('swap');
+  });
+}
+
 function ProductCard(p){
  return `<div class="card prodcard" onclick="location.hash='#/product/${p.id}'">
    <div class="prodicon">${p.icon}</div>

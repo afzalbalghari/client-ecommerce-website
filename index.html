@@ -1,64 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Gashgiran Souvenir — Naturals & Gifts from Hunza</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Gashgiran Souvenir — Naturals & Gifts from Hunza</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-<header>
- <div class="navwrap">
-   <a href="#/" class="brand"><img src="assets/logo.jpeg" alt="Gashgiran logo"><span>Gashgiran</span></a>
-   <nav class="links" id="navlinks">
-     <a href="#/">Home</a>
-     <a href="#/about">About Us</a>
-     <div class="dropdown" id="productsdd">
-       <a onclick="event.preventDefault();document.getElementById('productsdd').classList.toggle('open')" href="#/shop">Products ▾</a>
-       <div class="dropdownmenu">
-         <a href="#/shop?cat=Honey%20%26%20Salajeet">Honey & Salajeet</a>
-         <a href="#/shop?cat=Dried%20Fruit%20%26%20Nuts">Dried Fruit & Nuts</a>
-         <a href="#/shop?cat=Herbal%20Tea">Herbal Tea</a>
-         <a href="#/shop?cat=Fresh%20Seasonal%20Produce">Fresh Seasonal Produce</a>
-         <a href="#/gift-boxes">Gift Boxes</a>
-         <a href="#/corporate">Corporate Gifting</a>
-       </div>
-     </div>
-     <a href="#/our-story">Our Story</a>
-     <a href="#/contact">Contact</a>
-   </nav>
-   <div class="navicons">
-     <button class="pill pill-primary" style="padding:9px 18px;font-size:13px;" onclick="location.hash='#/shop'">Shop Now</button>
-     <button class="acctbtn" title="My Account" onclick="location.hash='#/account'">👤</button>
-     <button class="cartbtn" onclick="location.hash='#/cart'">🛒<span class="cartcount" id="cartcount">0</span></button>
-     <button class="mobiletoggle" onclick="document.getElementById('navlinks').classList.toggle('open')">☰</button>
-   </div>
- </div>
-</header>
+  <header>
+    <div class="navwrap">
+      <a href="#/" class="brand"><img src="assets/logo.jpeg" alt="Gashgiran logo"><span>Gashgiran Souvenir</span></a>
+      <nav class="links" id="navlinks">
+        <a href="#/">Home</a>
+        <a href="#/about">About Us</a>
+        <div class="dropdown" id="productsdd">
+          <a onclick="event.preventDefault();document.getElementById('productsdd').classList.toggle('open')"
+            href="#/shop">Products ▾</a>
+          <div class="dropdownmenu">
+            <a href="#/shop?cat=Honey%20%26%20Salajeet">Honey & Salajeet</a>
+            <a href="#/shop?cat=Dried%20Fruit%20%26%20Nuts">Dried Fruit & Nuts</a>
+            <a href="#/shop?cat=Herbal%20Tea">Herbal Tea</a>
+            <a href="#/shop?cat=Fresh%20Seasonal%20Produce">Fresh Seasonal Produce</a>
+            <a href="#/gift-boxes">Gift Boxes</a>
+            <a href="#/corporate">Corporate Gifting</a>
+          </div>
+        </div>
+        <a href="#/our-story">Our Story</a>
+        <a href="#/contact">Contact</a>
+      </nav>
+      <div class="navicons">
 
-<main id="app"></main>
+        <button class="pill pill-primary navcta" onclick="location.hash='#/shop'">Place Order</button>
+        <button class="acctbtn" title="My Account" onclick="location.hash='#/account'">👤</button>
+        <button class="cartbtn" onclick="location.hash='#/cart'">🛒<span class="cartcount"
+            id="cartcount">0</span></button>
+        <button class="mobiletoggle" onclick="document.getElementById('navlinks').classList.toggle('open')">☰</button>
+      </div>
+    </div>
+  </header>
 
-<footer>
- <div class="container">
-  <div class="footgrid">
-   <div>
-     <div class="brand" style="color:#fff;margin-bottom:10px;"><img src="assets/logo.jpeg" alt=""><span>Gashgiran</span></div>
-     <p style="font-size:13px;max-width:30ch;">Naturals & souvenirs sourced directly from the mountains of Hunza — honey, herbs, dried fruit and gift-ready collections.</p>
-   </div>
-   <div><h4 style="color:#fff;font-size:14px;">Products</h4>
-     <p><a href="#/shop">All Products</a></p><p><a href="#/gift-boxes">Gift Boxes</a></p><p><a href="#/cart">Cart</a></p><p><a href="#/account">My Account</a></p></div>
-   <div><h4 style="color:#fff;font-size:14px;">Company</h4>
-     <p><a href="#/about">About Us</a></p><p><a href="#/our-story">Our Story</a></p><p><a href="#/corporate">Corporate Gifting</a></p><p><a href="#/faqs">FAQs</a></p></div>
-   <div><h4 style="color:#fff;font-size:14px;">Contact</h4>
-     <p><a href="#/contact">Contact Us</a></p><p><a href="#/policies">Shipping & Returns</a></p><p><a href="#/policies">Privacy & Terms</a></p></div>
-  </div>
-  <div class="footbottom"><span>© 2026 Gashgiran Souvenir. All rights reserved.</span><span>Made in the mountains of Hunza, Gilgit-Baltistan 🍃</span></div>
- </div>
-</footer>
-<div class="toast" id="toast"></div>
+  <main id="app"></main>
 
-<script src="js/app.js"></script>
+  <footer>
+    <div class="container">
+      <div class="footgrid">
+        <div>
+          <div class="brand" style="color:#fff;margin-bottom:12px;"><img src="assets/logo.jpeg" alt=""><span>Gashgiran
+              Souvenir</span></div>
+          <p style="font-size:13px;max-width:34ch;">Naturals & souvenirs sourced directly from the mountains of Hunza —
+            honey, herbs, dried fruit and gift-ready collections.</p>
+          <div class="socials"><a href="#" aria-label="Facebook">f</a><a href="#" aria-label="Instagram">in</a><a
+              href="https://wa.me/923000000000" target="_blank" rel="noopener" aria-label="WhatsApp">wa</a></div>
+        </div>
+        <div>
+          <h4>Company</h4>
+          <p><a href="#/about">About Us</a></p>
+          <p><a href="#/our-story">Our Story</a></p>
+          <p><a href="#/corporate">Corporate Gifting</a></p>
+          <p><a href="#/contact">Contact Us</a></p>
+        </div>
+        <div>
+          <h4>Products</h4>
+          <p><a href="#/shop">All Products</a></p>
+          <p><a href="#/gift-boxes">Gift Boxes</a></p>
+          <p><a href="#/cart">Cart</a></p>
+          <p><a href="#/account">My Account</a></p>
+        </div>
+        <div>
+          <h4>Get harvest updates</h4>
+          <p style="font-size:13px;">Seasonal drops, new batches and offers.</p>
+          <form class="newsletter" onsubmit="event.preventDefault();showToast('Thanks for subscribing!');this.reset();">
+            <input type="email" required placeholder="Your email"><button class="pill pill-primary"
+              type="submit">Join</button></form>
+        </div>
+      </div>
+      <div class="footbottom"><span>© 2026 Gashgiran Souvenir. All rights reserved.</span><span><a
+            href="#/policies">Privacy Policy</a> · <a href="#/policies">Terms of Service</a> · <a
+            href="#/faqs">FAQs</a></span></div>
+    </div>
+  </footer>
+  <div class="toast" id="toast"></div>
+
+  <script src="js/app.js"></script>
 </body>
+
 </html>
