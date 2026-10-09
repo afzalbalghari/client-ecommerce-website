@@ -88,12 +88,14 @@ function route(){
   else if(path==='#/order-confirmation') app.innerHTML=OrderConf();
   else if(path==='#/contact') app.innerHTML=Contact();
   else if(path==='#/faqs') app.innerHTML=FAQs();
+  else if(path==='#/return-policy') app.innerHTML=ReturnPolicyPage();
   else if(path==='#/policies') app.innerHTML=Policies();
   else app.innerHTML=NotFound();
   renderCartCount();
   bindDynamic();
   initReveal();
   heroInit();
+  initTestimonialsSlider();
   initCounters();
   bindHomeTabs();
 }
@@ -127,16 +129,7 @@ const WHY_POINTS=[
  ['🎁','Gift-Ready Packaging','From the Mountain Box to the Heritage Collection — beautifully packed and ready to give.'],
  ['🤝','Fair & Transparent','Fair prices for growers, honest prices for you, and a QR origin story on every pack.'],
 ];
-const PROCESS_STEPS=[
- ['01','Harvest','Honey, herbs and fruit are collected in season from Hunza\'s meadows and terraced orchards.'],
- ['02','Selection','Every batch is hand-checked. Only produce that meets our standard moves forward.'],
- ['03','Small-Batch Processing','Sun-drying, straining and blending are done in small runs to protect natural quality.'],
- ['04','Packing','Products are sealed, labelled with origin details and packed into jars, pouches or gift boxes.'],
- ['05','Dispatch','Orders go out quickly, with a confirmation on email and an optional WhatsApp update.'],
- ['06','Delivery & Support','Cash on Delivery, wallet, bank transfer or card — and real people on WhatsApp if you need help.'],
-];
 // Facts about the store (not performance claims) — safe to show; update if the range changes.
-const HOME_STATS=[[8,'','Core Products'],[3,'','Gift Box Tiers'],[5,'','Ways to Pay'],[100,'%','Hunza-Sourced']];
 // SAMPLE REVIEWS — replace with real customer reviews before launch, or set SHOW_REVIEWS to false.
 const SHOW_REVIEWS=true;
 const REVIEWS=[
@@ -157,7 +150,7 @@ const HOME_FAQS=[
 /* ---------- PAGE BUILDERS ---------- */
 function Home(){
  const tabs=['Featured',...CATS.slice(1)];
- const featured=PRODUCTS.filter(p=>p.stock!=='out').slice(0,4);
+ const featured=PRODUCTS.filter(p=>p.stock!=='out').slice(0,6);
  const marquee=[...HOME_CATS,...HOME_CATS].map(c=>`<a class="catcard" href="${c.link}" style="background-image:url('${c.img}')"><span>${c.name}</span></a>`).join('');
  return `
  <section class="hero" id="hero">
@@ -183,7 +176,7 @@ function Home(){
  <div class="marquee"><div class="marquee-track">${marquee}</div></div>
  </section>
 
- <section class="pad why reveal"><div class="container">
+ <section class="pad why reveal" style="background:var(--green-pale)"><div class="container">
    <div class="whygrid">
      <div>
        <span class="eyebrow">/ Why Gashgiran Souvenir?</span>
@@ -192,34 +185,38 @@ function Home(){
        <div class="whyimg" style="background-image:url('assets/wy.jpg')"></div>
        <div class="ctas"><button class="pill pill-primary" onclick="location.hash='#/shop'">Explore Products</button><button class="pill pill-outline" onclick="location.hash='#/our-story'">Our Story</button></div>
      </div>
-     <div class="whylist">${WHY_POINTS.map(w=>`<div class="whyitem"><div class="whyicon">${w[0]}</div><div><h3>${w[1]}</h3><p>${w[2]}</p></div></div>`).join('')}</div>
+     <div class="whytext" style="display:flex;align-items:center;height:100%;min-height:340px;padding:12px 0 0;"><p style="margin:0;font-size:17px;line-height:1.8;color:#405344;">At Gashgiran Souvenir, we bring the real taste of Hunza to your table with honest sourcing, small-batch care, and gift-worthy presentation. Every product is selected directly from growers and harvesters in the region, packed with care, and delivered with the transparency our customers expect from mountain-origin products.</p></div>
    </div>
  </div></section>
 
- <section class="pad featured reveal" style="background:var(--green-pale)"><div class="container">
+ <section class="pad featured reveal" style="background:#fff"><div class="container">
    <div class="sectionhead"><span class="eyebrow">Products</span><h2>Featured Products from the Mountains</h2><p>A curated selection of our most loved products.</p></div>
    <div class="filters center" id="hometabs">${tabs.map((t,i)=>`<button class="fpill ${i===0?'active':''}" data-tab="${t}">${t}</button>`).join('')}</div>
-   <div class="grid" id="homegrid">${featured.map(ProductCard).join('')}</div>
+   <div class="productslider">
+     <button class="review-arrow product-prev" aria-label="Previous products">‹</button>
+     <div class="productviewport">
+       <div class="producttrack" id="homegrid">${featured.map(ProductCard).join('')}</div>
+     </div>
+     <button class="review-arrow product-next" aria-label="Next products">›</button>
+   </div>
    <div style="text-align:center;margin-top:28px;"><button class="pill pill-dark" onclick="location.hash='#/shop'">View All Products</button></div>
  </div></section>
 
- <section class="pad reveal"><div class="container">
+ <section class="pad reveal" style="background:var(--green-pale)"><div class="container">
    <div class="sectionhead"><span class="eyebrow">Gift Boxes</span><h2>Gift Boxes for Every Occasion</h2><p>Three tiers, built for every kind of gifting.</p></div>
    <div class="giftgrid">${GIFTBOXES.map(GiftCard).join('')}</div>
  </div></section>
 
- <section class="pad process reveal"><div class="container">
-   <div class="sectionhead"><span class="eyebrow">Process</span><h2>From Hunza to Your Door in 6 Steps</h2><p>Six transparent steps from harvest to delivery.</p></div>
-   <div class="processgrid">${PROCESS_STEPS.map(s=>`<div class="card stepcard"><div class="stepnum">${s[0]}</div><h3>${s[1]}</h3><p>${s[2]}</p></div>`).join('')}</div>
- </div></section>
-
- <section class="stats reveal"><div class="container statsgrid">
-   ${HOME_STATS.map(s=>`<div class="stat"><div class="statnum"><span class="count" data-target="${s[0]}">0</span>${s[1]||'+'}</div><div class="statlabel">${s[2]}</div></div>`).join('')}
- </div></section>
-
  ${SHOW_REVIEWS?`<section class="pad reveal"><div class="container">
    <div class="sectionhead"><span class="eyebrow">Testimonials</span><h2>What Our Customers Say</h2></div>
-   <div class="reviewgrid">${REVIEWS.map(r=>`<div class="card review"><div class="avatar">${r[0]}</div><h3>${r[1]}</h3><div class="role">${r[2]}</div><p>${r[3]}</p></div>`).join('')}</div>
+   <div class="reviewslider">
+     <button class="review-arrow review-prev" aria-label="Previous testimonial">‹</button>
+     <div class="reviewviewport">
+       <div class="reviewtrack">${REVIEWS.map(r=>`<div class="card review"><div class="avatar">${r[0]}</div><h3>${r[1]}</h3><div class="role">${r[2]}</div><p>${r[3]}</p></div>`).join('')}</div>
+     </div>
+     <button class="review-arrow review-next" aria-label="Next testimonial">›</button>
+   </div>
+   <div class="reviewdots">${REVIEWS.map((_,i)=>`<button class="review-dot ${i===0?'active':''}" aria-label="Show testimonial ${i+1}"></button>`).join('')}</div>
  </div></section>`:''}
 
  <section class="pad faqsec reveal" style="background:var(--green-pale)"><div class="container" style="max-width:820px;">
@@ -260,6 +257,47 @@ function heroInit(){
   hero.addEventListener('mouseenter',stop); hero.addEventListener('mouseleave',start);
   go(0); start();
 }
+function initTestimonialsSlider(){
+  const slider=document.querySelector('.reviewslider');
+  if(!slider || slider.dataset.initialized==='true') return;
+  const track=slider.querySelector('.reviewtrack');
+  const cards=[...slider.querySelectorAll('.review')];
+  const prev=slider.querySelector('.review-prev');
+  const next=slider.querySelector('.review-next');
+  const dots=[...slider.querySelectorAll('.review-dot')];
+  if(!cards.length) return;
+  let index=0;
+  function getVisibleCount(){
+    if(window.innerWidth < 560) return 1;
+    if(window.innerWidth < 1000) return 2;
+    return 3;
+  }
+  function updateSlider(){
+    const visible=getVisibleCount();
+    const maxIndex=Math.max(0,cards.length-visible);
+    if(index>maxIndex) index=maxIndex;
+    const gap=parseFloat(getComputedStyle(track).gap || 0);
+    const cardWidth=cards[0].getBoundingClientRect().width + gap;
+    track.style.transform=`translateX(-${index*cardWidth}px)`;
+    dots.forEach((dot,i)=>dot.classList.toggle('active',i===index));
+  }
+  function step(delta){
+    const visible=getVisibleCount();
+    const maxIndex=Math.max(0,cards.length-visible);
+    if(delta>0){ index=(index>=maxIndex?0:index+1); }
+    else { index=(index<=0?maxIndex:index-1); }
+    updateSlider();
+  }
+  prev.addEventListener('click',()=>step(-1));
+  next.addEventListener('click',()=>step(1));
+  dots.forEach((dot,i)=>dot.addEventListener('click',()=>{index=i; updateSlider();}));
+  slider.addEventListener('mouseenter',()=>clearInterval(window._reviewsTimer));
+  slider.addEventListener('mouseleave',()=>{clearInterval(window._reviewsTimer); window._reviewsTimer=setInterval(()=>step(1),5000);});
+  window.addEventListener('resize',updateSlider);
+  slider.dataset.initialized='true';
+  window._reviewsTimer=setInterval(()=>step(1),5000);
+  updateSlider();
+}
 function initCounters(){
   const els=document.querySelectorAll('.count'); if(!els.length) return;
   const io=new IntersectionObserver(entries=>entries.forEach(en=>{
@@ -273,16 +311,58 @@ function initCounters(){
   }),{threshold:.4});
   els.forEach(el=>io.observe(el));
 }
+function initProductSlider(){
+  const slider=document.querySelector('.productslider');
+  if(!slider) return;
+  const track=slider.querySelector('.producttrack');
+  const cards=[...track.children];
+  if(!cards.length) return;
+  const prev=slider.querySelector('.product-prev');
+  const next=slider.querySelector('.product-next');
+  let index=0;
+
+  function visibleCount(){
+    if(window.innerWidth < 560) return 1;
+    if(window.innerWidth < 920) return 2;
+    if(window.innerWidth < 1200) return 3;
+    return 4;
+  }
+
+  function update(){
+    const count=visibleCount();
+    const maxIndex=Math.max(0,cards.length-count);
+    if(index>maxIndex) index=maxIndex;
+    const gap=parseFloat(getComputedStyle(track).gap || 0);
+    const cardWidth=cards[0].getBoundingClientRect().width + gap;
+    track.style.transform=`translateX(-${index*cardWidth}px)`;
+    if(prev) prev.disabled=index===0;
+    if(next) next.disabled=index>=maxIndex;
+  }
+
+  function step(delta){
+    const count=visibleCount();
+    const maxIndex=Math.max(0,cards.length-count);
+    index=delta>0 ? Math.min(maxIndex,index+1) : Math.max(0,index-1);
+    update();
+  }
+
+  prev.onclick=()=>step(-1);
+  next.onclick=()=>step(1);
+  window.addEventListener('resize',update, { once: false });
+  update();
+}
+
 function bindHomeTabs(){
   const tabs=document.getElementById('hometabs'); if(!tabs) return;
   tabs.querySelectorAll('.fpill').forEach(btn=>btn.onclick=()=>{
     tabs.querySelectorAll('.fpill').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     const t=btn.dataset.tab;
-    const list=t==='Featured'?PRODUCTS.filter(p=>p.stock!=='out').slice(0,4):PRODUCTS.filter(p=>p.cat===t);
+    const list=t==='Featured'?PRODUCTS.filter(p=>p.stock!=='out').slice(0,6):PRODUCTS.filter(p=>p.cat===t);
     const g=document.getElementById('homegrid');
     g.innerHTML=list.map(ProductCard).join('');
     g.classList.remove('swap'); void g.offsetWidth; g.classList.add('swap');
+    initProductSlider();
   });
 }
 
@@ -357,16 +437,45 @@ function GiftBoxesPage(){
  </div>`;
 }
 function OurStory(){
- return `<div class="container pad" style="max-width:800px;">
-   <h1 style="color:var(--green-deep)">Our Story</h1>
-   <p>Gashgiran began with a simple idea: bring the honest, small-batch harvests of Hunza's orchards and highlands directly to people's tables — without losing the story behind each jar.</p>
-   <p class="quote">"Every jar carries the story of the mountain it came from."</p>
-   <p>We work directly with growers in Karimabad, Altit and the orchard terraces beneath Rakaposhi, paying fair prices and keeping the supply chain short and traceable. What you receive is what was harvested — nothing more.</p>
-   <div class="mapcard reveal" style="margin-top:26px;">
-     <h4 style="color:#fff">Where it comes from</h4>
-     <div class="pin"><span class="leaf">🍃</span> Rakaposhi — orchard highlands</div>
-     <div class="pin"><span class="leaf">🍃</span> Karimabad — honey & herb collection</div>
-     <div class="pin"><span class="leaf">🍃</span> Altit — heritage fruit terraces</div>
+ return `<div class="container pad" style="max-width:1000px;">
+   <div class="story-shell">
+     <div class="story-hero card">
+       <div class="story-kicker">Our Story</div>
+       <h1 style="color:var(--green-deep); margin:0;">A mountain idea that returned.</h1>
+       <p>Gashgiran started with an idea in 2019 — a simple way to bring the culture, craftsmanship, and natural richness of Pakistan’s mountains closer to people who value authentic products.</p>
+     </div>
+
+     <div class="story-grid">
+       <div class="story-card card">
+         <h3>Where it began</h3>
+         <p>While exploring the potential of Gilgit-Baltistan, we imagined a simple way to connect people with the products, traditions, and craftsmanship of Pakistan’s mountains.</p>
+         <p>We pitched the idea to the National Incubator (NI) Pakistan in 2019, but it was not selected. Due to circumstances at the time, we could not continue the venture, and Gashgiran was put on hold.</p>
+       </div>
+
+       <div class="story-card card accent">
+         <h3>Why it mattered</h3>
+         <p>But the idea never disappeared.</p>
+         <p>Over the years, our journey through tourism brought us closer to mountain communities, farmers, artisans, and local producers. We began to see the mountains differently — not only as breathtaking destinations, but as places rich in natural products, traditional craftsmanship, local flavors, and stories.</p>
+       </div>
+     </div>
+
+     <div class="story-quote card">
+       <span class="quote-mark">“</span>
+       <p>Gashgiran is more than a store. It is an idea that waited for its time.</p>
+     </div>
+
+     <div class="story-grid single">
+       <div class="story-card card">
+         <h3>Today</h3>
+         <p>So, Gashgiran is back.</p>
+         <p>Today, our vision is simple: to bring authentic mountain products from Pakistan closer to you.</p>
+         <p>From natural products and dry fruits to handcrafted goods and meaningful souvenirs, we carefully seek products that have a genuine connection to the places and people behind them.</p>
+       </div>
+     </div>
+
+     <div class="story-footer card">
+       <h3>From the mountains of Pakistan to your doorstep.</h3>
+     </div>
    </div>
  </div>`;
 }
@@ -517,6 +626,89 @@ function FAQs(){
  ['What is your return policy for perishables?','Perishable items like honey and fresh fruit have different return terms than dry goods — see our Shipping & Returns Policy.']];
  return `<div class="container pad reveal" style="max-width:700px;"><h1 style="color:var(--green-deep)">FAQs</h1>
    ${faqs.map(f=>`<details class="faqrow" style="border:none;"><summary>${f[0]}</summary><p style="font-size:14px;color:#555;">${f[1]}</p></details>`).join('')}
+ </div>`;
+}
+function ReturnPolicyPage(){
+ return `<div class="container pad" style="max-width:900px;">
+  <div class="policy-wrap">
+    <div class="policy-header card">
+      <div class="crumb"><a href="#/">Home</a> / Return & Refund Policy</div>
+      <h1 style="color:var(--green-deep)">Return & Refund Policy</h1>
+      <p class="policy-summary">We want you to be happy with every order. Because most of our products are food, the rules below protect both your health and the quality of what we send. <strong>Last updated: October 2026</strong></p>
+      <p class="policy-highlight"><strong>Quick summary:</strong> if your order arrives damaged, leaking, wrong or incomplete, message us on WhatsApp within <strong>48 hours</strong> of delivery with photos and we will replace it or refund you.</p>
+      <div class="policy-actions">
+        <a class="pill pill-primary" href="https://wa.me/923000000000" target="_blank" rel="noopener">Message on WhatsApp</a>
+        <a class="pill pill-outline" href="#/contact">Contact Page</a>
+      </div>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-number">1</div>
+      <h3>When you can return or claim a refund</h3>
+      <ul>
+        <li>The item arrived <strong>damaged, leaking or spoiled</strong>.</li>
+        <li>You received the <strong>wrong product</strong>, wrong size/weight, or a missing item.</li>
+        <li>The product is clearly <strong>different from its description</strong> on the website.</li>
+      </ul>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-number">2</div>
+      <h3>How to report a problem</h3>
+      <ol>
+        <li>Contact us on <a href="https://wa.me/923000000000" target="_blank" rel="noopener">WhatsApp</a> or through the <a href="#/contact">Contact page</a> within <strong>48 hours of delivery</strong>.</li>
+        <li>Send your order number (e.g. GG-12345) and clear photos of the product and its packaging.</li>
+        <li>We review your claim and reply within 1–2 business days.</li>
+      </ol>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-number">3</div>
+      <h3>What we cannot accept back</h3>
+      <ul>
+        <li><strong>Opened or used</strong> honey, tea, nuts, dried fruit and other food items — for hygiene and safety reasons.</li>
+        <li><strong>Fresh seasonal produce</strong> (cherries, apples) — it is perishable, so claims are only accepted for damage or spoilage reported within 48 hours.</li>
+        <li>Change-of-mind returns on food products.</li>
+        <li>Natural variation in colour, crystallisation of honey, or taste differences between seasonal batches — these are normal for natural products.</li>
+      </ul>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-number">4</div>
+      <h3>Replacement or refund</h3>
+      <p>Once a claim is approved we will, at your choice where stock allows, <strong>send a replacement</strong> or <strong>issue a refund</strong>. For damaged or wrong items we cover the return/replacement delivery cost.</p>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-number">5</div>
+      <h3>How refunds are paid</h3>
+      <p>You paid by:</p>
+      <ul>
+        <li><strong>Cash on Delivery:</strong> Refund goes to the bank account or JazzCash / EasyPaisa number you provide.</li>
+        <li><strong>JazzCash / EasyPaisa:</strong> The same wallet.</li>
+        <li><strong>Bank Transfer:</strong> The account you paid from.</li>
+        <li><strong>Card:</strong> The original card.</li>
+      </ul>
+      <p>Refunds are processed within <strong>5–7 business days</strong> of approval; card refunds may take longer depending on your bank.</p>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-number">6</div>
+      <h3>Gift boxes & corporate orders</h3>
+      <p>Gift boxes follow the same rules — report any damage or missing contents within 48 hours. Custom and bulk corporate orders are agreed individually; please confirm return terms with us when you request your quote.</p>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-number">7</div>
+      <h3>Order changes & cancellations</h3>
+      <p>You can cancel or change an order before it is dispatched by contacting us on WhatsApp. Once an order has shipped it can no longer be cancelled.</p>
+    </div>
+
+    <div class="policy-footer card">
+      <p><a href="https://wa.me/923000000000" target="_blank" rel="noopener" class="policy-link">Contact us on WhatsApp</a></p>
+      <p><a href="#/policies" class="policy-link secondary">Shipping & Other Policies</a></p>
+    </div>
+  </div>
  </div>`;
 }
 function Policies(){
