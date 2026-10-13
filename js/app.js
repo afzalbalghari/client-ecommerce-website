@@ -237,7 +237,7 @@ function Home(){
  <div class="ctaband reveal" style="background-image:linear-gradient(rgba(10,38,20,.86),rgba(10,38,20,.86)),url('assets/hero/hero4.jpg');"><div class="container">
    <h2>Ready for a taste of Hunza?</h2>
    <p style="max-width:44ch;margin:0 auto 22px;color:#d9e8db;">Place your order in minutes, or chat with us on WhatsApp — we'll help you choose.</p>
-   <div class="ctas" style="justify-content:center;"><button class="pill pill-primary" onclick="location.hash='#/shop'">Place an Order</button><a class="pill pill-glass" href="https://wa.me/923000000000" target="_blank" rel="noopener">Chat on WhatsApp</a></div>
+   <div class="ctas" style="justify-content:center;"><button class="pill pill-primary" onclick="location.hash='#/shop'">Place an Order</button><a class="pill pill-glass" href="https://wa.me/923448822311" target="_blank" rel="noopener">Chat on WhatsApp</a></div>
  </div></div>
  `;
 }
