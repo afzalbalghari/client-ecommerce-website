@@ -1,4 +1,5 @@
 /* ---------- DATA ---------- */
+const BUSINESS_EMAIL='Order@gashgiransouvenir.com';
 const PRODUCTS=[
  {id:'honey',name:'Mountain Honey',icon:'🍯',tagline:'Pure Mountain Harvest',cat:'Honey & Salajeet',
   desc:'Raw, unfiltered honey harvested from wildflower meadows above Karimabad — thick, aromatic and gently strained, never heated.',
@@ -75,6 +76,10 @@ function renderCartCount(){
   el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
 }
 function fmt(n){return 'PKR '+n.toLocaleString();}
+function sendBusinessMail(subject, body){
+  const email='mailto:'+BUSINESS_EMAIL+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+  window.location.href=email;
+}
 
 /* ---------- ROUTER ---------- */
 function route(){
@@ -609,7 +614,7 @@ function OrderConf(){
    <div style="font-size:52px;">✅</div>
    <h2 style="color:var(--green-deep)">Thank you! Your order is confirmed.</h2>
    <p>Order #${o.id||''} · Payment method: <strong>${o.pay||''}</strong></p>
-   <p style="font-size:13px;color:#666;">📧 A confirmation email has been sent to ${o.email||'your inbox'}.</p>
+   <p style="font-size:13px;color:#666;">📧 A confirmation email has been sent to ${o.email||'your inbox'} and copied to <a href="mailto:${BUSINESS_EMAIL}" style="color:var(--coral-deep);font-weight:600;">${BUSINESS_EMAIL}</a>.</p>
    ${o.pay==='Bank Transfer'?'<p style="font-size:13px;color:var(--coral-deep);">We\'ll confirm your order manually once your transfer is received.</p>':''}
    ${o.pay==='WhatsApp Order'?'<p style="font-size:13px;color:var(--coral-deep);">We\'ll confirm your payment method and delivery details with you on WhatsApp.</p>':''}
    <p class="mono" style="color:var(--coral-deep);">Status: Processing → Shipped → Delivered</p>
@@ -620,6 +625,7 @@ function OrderConf(){
 function Contact(){
  return `<div class="container pad" style="max-width:600px;">
   <h1 style="color:var(--green-deep)">Contact Us</h1>
+  <p style="font-size:14px;color:#555;">Business email: <a href="mailto:${BUSINESS_EMAIL}" style="color:var(--coral-deep);font-weight:600;">${BUSINESS_EMAIL}</a></p>
   <form id="contactform">
     <label>Name</label><input required name="name">
     <label>Email</label><input required type="email" name="email">
@@ -820,10 +826,20 @@ function bindDynamic(){
  }
  // corporate bulk form
  const bulk=document.getElementById('bulkform');
- if(bulk) bulk.onsubmit=e=>{e.preventDefault();showToast('Quote request sent — our team will contact you shortly.');bulk.reset();};
+ if(bulk) bulk.onsubmit=e=>{e.preventDefault();
+   const body=`Company: ${bulk.company.value}\nContact: ${bulk.contact.value}\nEstimated quantity: ${bulk.qty.value}\nOccasion: ${bulk.occasion.value || 'N/A'}\nDelivery timeline: ${bulk.timeline.value || 'N/A'}`;
+   sendBusinessMail('New bulk quote request', body);
+   showToast('Quote request sent — our team will contact you shortly.');
+   bulk.reset();
+ };
  // contact form
  const cf=document.getElementById('contactform');
- if(cf) cf.onsubmit=e=>{e.preventDefault();showToast('Message sent — thank you!');cf.reset();};
+ if(cf) cf.onsubmit=e=>{e.preventDefault();
+   const body=`Name: ${cf.name.value}\nEmail: ${cf.email.value}\nMessage:\n${cf.message.value}`;
+   sendBusinessMail('New customer message', body);
+   showToast('Message sent — thank you!');
+   cf.reset();
+ };
  // checkout payment pills + submit
  const payrow=document.getElementById('payrow');
  if(payrow) payrow.querySelectorAll('.radiopill').forEach(p=>p.onclick=()=>{
@@ -837,8 +853,11 @@ function bindDynamic(){
    e.preventDefault();
    const payEl=payrow.querySelector('.radiopill.active');
    const order={id:'GG-'+Math.floor(10000+Math.random()*89999),pay:payEl?payEl.dataset.pay:'Cash on Delivery',email:co.email.value,total:cartTotal(),items:cart.map(i=>({name:i.name,variant:i.variant,qty:i.qty,price:i.price}))};
+   const orderBody=`Order ID: ${order.id}\nCustomer: ${co.name.value}\nPhone: ${co.phone.value}\nEmail: ${order.email}\nAddress: ${co.address.value}\nShipping region: ${co.region.value}\nPayment method: ${order.pay}\n\nItems:\n${order.items.map(i=>`- ${i.name} (${i.variant || 'N/A'}) x ${i.qty} = PKR ${Number(i.price*i.qty).toLocaleString()}`).join('\n')}\n\nTotal: PKR ${Number(order.total).toLocaleString()}`;
    localStorage.setItem('gg_last_order',JSON.stringify(order));
-   cart=[];saveCart();location.hash='#/order-confirmation';
+   cart=[];saveCart();
+   location.hash='#/order-confirmation';
+   setTimeout(()=>sendBusinessMail('New order received', orderBody), 250);
  };
 }
 
