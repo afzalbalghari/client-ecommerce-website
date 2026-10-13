@@ -35,13 +35,23 @@ const PRODUCTS=[
   usage:'Store in a cool place; refrigerate for longer freshness.',
   ingredients:'Fresh apples.',
   variants:[{w:'2kg',price:1600}], origin:'Sourced from Hunza, Gilgit-Baltistan', stock:'out', pairs:['nuts']},
+ {id:'handicrafts',name:'Handicrafts',icon:'🧵',tagline:'Traditional Handmade Treasures',cat:'Handicrafts',
+  desc:'Authentic handcrafted items inspired by the artistry and heritage of Hunza, made with care by local artisans.',
+  usage:'Handle with care and keep away from moisture and direct sunlight to preserve detail and finish.',
+  ingredients:'Handcrafted natural materials and artisan finishing.',
+  variants:[{w:'1 Piece',price:2500}], origin:'Crafted in Gilgit-Baltistan', stock:'in', pairs:['souvenirs']},
+ {id:'souvenirs',name:'Souvenirs',icon:'🎉',tagline:'Mountain Keepsakes',cat:'Souvenirs',
+  desc:'Memorable souvenirs celebrating the culture, scenery and spirit of the mountains, perfect for gifting or keeping.',
+  usage:'Store in a dry place and keep away from sharp objects or heavy pressure.',
+  ingredients:'Locally made decorative souvenir pieces.',
+  variants:[{w:'1 Unit',price:1800}], origin:'Made in Hunza, Gilgit-Baltistan', stock:'in', pairs:['handicrafts']},
 ];
 const GIFTBOXES=[
  {id:'giftbox-mountain',name:'Mountain Box',tier:'Entry',price:2800,contents:['Honey 250g','Dried Apricots 150g','Kraft gift box'],icon:'🎁'},
  {id:'giftbox-hunza',name:'Hunza Collection',tier:'Premium',price:5200,contents:['Honey 500g','Wild Thyme Tea','Dried Apricots','Mountain Nuts','Rigid gift box'],icon:'🎀',featured:true},
  {id:'giftbox-heritage',name:'Heritage Collection',tier:'Corporate / VIP',price:8900,contents:['Everything in Hunza Collection','Salajeet','Origin story insert card','Rigid box with wax seal'],icon:'👑'},
 ];
-const CATS=['All','Honey & Salajeet','Dried Fruit & Nuts','Herbal Tea','Fresh Seasonal Produce'];
+const CATS=['All','Honey & Salajeet','Dried Fruit & Nuts','Herbal Tea','Fresh Seasonal Produce','Handicrafts','Souvenirs'];
 
 /* ---------- STATE ---------- */
 let cart=JSON.parse(localStorage.getItem('gg_cart')||'[]');
@@ -162,7 +172,7 @@ function Home(){
      <p>Honey, herbs, dried fruit and gift-ready collections — sourced straight from the orchards and meadows of Hunza, and delivered to your door.</p>
      <div class="ctas">
        <button class="pill pill-primary" onclick="location.hash='#/shop'">Shop Products</button>
-       <a class="pill pill-glass" href="https://wa.me/923000000000" target="_blank" rel="noopener">Order on WhatsApp</a>
+       <a class="pill pill-glass" href="https://wa.me/923448822311" target="_blank" rel="noopener">Order on WhatsApp</a>
      </div>
    </div>
    <button class="hero-arrow prev" aria-label="Previous slide">‹</button>
@@ -589,7 +599,7 @@ function sendWhatsAppOrder(){
   const msg=`Hi Gashgiran! I'd like to place this order:\n\n${lines}\n\nTotal: ${fmt(cartTotal())}`+
     (name?`\n\nName: ${name}`:'')+(phone?`\nPhone: ${phone}`:'')+(address?`\nDelivery address: ${address}`:'')+
     `\n\nI'll confirm my payment method here on WhatsApp.`;
-  window.open(`https://wa.me/923000000000?text=${encodeURIComponent(msg)}`,'_blank');
+  window.open(`https://wa.me/923448822311?text=${encodeURIComponent(msg)}`,'_blank');
 }
 function OrderConf(){
  const o=JSON.parse(localStorage.getItem('gg_last_order')||'{}');
@@ -603,7 +613,7 @@ function OrderConf(){
    ${o.pay==='Bank Transfer'?'<p style="font-size:13px;color:var(--coral-deep);">We\'ll confirm your order manually once your transfer is received.</p>':''}
    ${o.pay==='WhatsApp Order'?'<p style="font-size:13px;color:var(--coral-deep);">We\'ll confirm your payment method and delivery details with you on WhatsApp.</p>':''}
    <p class="mono" style="color:var(--coral-deep);">Status: Processing → Shipped → Delivered</p>
-   <a class="pill" style="background:#25D366;color:#fff;margin:6px;" href="https://wa.me/923000000000?text=${waText}" target="_blank">💬 Message us on WhatsApp</a>
+   <a class="pill" style="background:#25D366;color:#fff;margin:6px;" href="https://wa.me/923448822311?text=${waText}" target="_blank">💬 Message us on WhatsApp</a>
    <button class="pill pill-primary" style="margin:6px;" onclick="location.hash='#/shop'">Continue Shopping</button>
  </div></div>`;
 }
@@ -616,7 +626,7 @@ function Contact(){
     <label>Message</label><textarea required rows="4" name="message"></textarea>
     <button type="submit" class="pill pill-primary" style="width:100%;justify-content:center;">Send Message</button>
   </form>
-  <p style="margin-top:20px;font-size:14px;">Or reach us directly on <a style="color:var(--coral-deep);font-weight:600;" href="https://wa.me/923000000000" target="_blank">WhatsApp →</a></p>
+  <p style="margin-top:20px;font-size:14px;">Or reach us directly on <a style="color:var(--coral-deep);font-weight:600;" href="https://wa.me/923448822311" target="_blank">WhatsApp →</a></p>
  </div>`;
 }
 function FAQs(){
@@ -637,7 +647,7 @@ function ReturnPolicyPage(){
       <p class="policy-summary">We want you to be happy with every order. Because most of our products are food, the rules below protect both your health and the quality of what we send. <strong>Last updated: October 2026</strong></p>
       <p class="policy-highlight"><strong>Quick summary:</strong> if your order arrives damaged, leaking, wrong or incomplete, message us on WhatsApp within <strong>48 hours</strong> of delivery with photos and we will replace it or refund you.</p>
       <div class="policy-actions">
-        <a class="pill pill-primary" href="https://wa.me/923000000000" target="_blank" rel="noopener">Message on WhatsApp</a>
+        <a class="pill pill-primary" href="https://wa.me/923448822311" target="_blank" rel="noopener">Message on WhatsApp</a>
         <a class="pill pill-outline" href="#/contact">Contact Page</a>
       </div>
     </div>
@@ -656,7 +666,7 @@ function ReturnPolicyPage(){
       <div class="policy-number">2</div>
       <h3>How to report a problem</h3>
       <ol>
-        <li>Contact us on <a href="https://wa.me/923000000000" target="_blank" rel="noopener">WhatsApp</a> or through the <a href="#/contact">Contact page</a> within <strong>48 hours of delivery</strong>.</li>
+        <li>Contact us on <a href="https://wa.me/923448822311" target="_blank" rel="noopener">WhatsApp</a> or through the <a href="#/contact">Contact page</a> within <strong>48 hours of delivery</strong>.</li>
         <li>Send your order number (e.g. GG-12345) and clear photos of the product and its packaging.</li>
         <li>We review your claim and reply within 1–2 business days.</li>
       </ol>
@@ -705,7 +715,7 @@ function ReturnPolicyPage(){
     </div>
 
     <div class="policy-footer card">
-      <p><a href="https://wa.me/923000000000" target="_blank" rel="noopener" class="policy-link">Contact us on WhatsApp</a></p>
+      <p><a href="https://wa.me/923448822311" target="_blank" rel="noopener" class="policy-link">Contact us on WhatsApp</a></p>
       <p><a href="#/policies" class="policy-link secondary">Shipping & Other Policies</a></p>
     </div>
   </div>
