@@ -87,6 +87,7 @@ function route(){
   const hash=location.hash||'#/';
   const [path,query]=hash.split('?');
   const app=document.getElementById('app');
+  document.body.classList.toggle('ourstory-page',path==='#/our-story');
   document.getElementById('navlinks').classList.remove('open');
   const dd=document.getElementById('productsdd'); if(dd) dd.classList.remove('open');
   window.scrollTo(0,0);
