@@ -95,7 +95,6 @@ function route(){
   else if(path.startsWith('#/product/')) app.innerHTML=ProductPage(path.split('/')[2]);
   else if(path==='#/gift-boxes') app.innerHTML=GiftBoxesPage();
   else if(path==='#/our-story') app.innerHTML=OurStory();
-  else if(path==='#/about') app.innerHTML=AboutUs();
   else if(path==='#/corporate') app.innerHTML=Corporate();
   else if(path==='#/account') app.innerHTML=Account();
   else if(path==='#/cart') app.innerHTML=CartPage();
@@ -239,7 +238,7 @@ function Home(){
    ${HOME_FAQS.map(f=>`<details class="faqitem"><summary>${f[0]}</summary><p>${f[1]}</p></details>`).join('')}
  </div></section>
 
- <div class="ctaband reveal" style="background-image:linear-gradient(rgba(10,38,20,.86),rgba(10,38,20,.86)),url('assets/hero/hero4.jpg');"><div class="container">
+ <div class="ctaband reveal" style="background-image:linear-gradient(rgba(10,38,20,.86),rgba(10,38,20,.86)),url('assets/hero/mot3.jpg');"><div class="container">
    <h2>Ready for a taste of Hunza?</h2>
    <p style="max-width:44ch;margin:0 auto 22px;color:#d9e8db;">Place your order in minutes, or chat with us on WhatsApp — we'll help you choose.</p>
    <div class="ctas" style="justify-content:center;"><button class="pill pill-primary" onclick="location.hash='#/shop'">Place an Order</button><a class="pill pill-glass" href="https://wa.me/923448822311" target="_blank" rel="noopener">Chat on WhatsApp</a></div>
@@ -452,45 +451,71 @@ function GiftBoxesPage(){
  </div>`;
 }
 function OurStory(){
- return `<div class="container pad" style="max-width:1000px;">
+ return `<div class="container pad story-page">
    <div class="story-shell">
-     <div class="story-hero card">
-       <div class="story-kicker">Our Story</div>
-       <h1 style="color:var(--green-deep); margin:0;">A mountain idea that returned.</h1>
-       <p>Gashgiran started with an idea in 2019 — a simple way to bring the culture, craftsmanship, and natural richness of Pakistan’s mountains closer to people who value authentic products.</p>
-     </div>
+     <header class="story-hero">
+      <h1>Our Story</h1>
+      <h2>A name rooted in the trade traditions of Gilgit-Baltistan.</h2>
+       <p>An idea that waited. A promise to bring authentic mountain products from Pakistan closer to you.</p>
+     </header>
 
-     <div class="story-grid">
-       <div class="story-card card">
-         <h3>Where it began</h3>
-         <p>While exploring the potential of Gilgit-Baltistan, we imagined a simple way to connect people with the products, traditions, and craftsmanship of Pakistan’s mountains.</p>
-         <p>We pitched the idea to the National Incubator (NI) Pakistan in 2019, but it was not selected. Due to circumstances at the time, we could not continue the venture, and Gashgiran was put on hold.</p>
+     <section class="story-origin">
+       <div class="story-sectionhead">
+         <h2>The meaning behind our name</h2>
+         <h3>Honest trade, measured with care.</h3>
        </div>
-
-       <div class="story-card card accent">
-         <h3>Why it mattered</h3>
-         <p>But the idea never disappeared.</p>
-         <p>Over the years, our journey through tourism brought us closer to mountain communities, farmers, artisans, and local producers. We began to see the mountains differently — not only as breathtaking destinations, but as places rich in natural products, traditional craftsmanship, local flavors, and stories.</p>
+       <div class="story-origin-grid">
+         <div>
+           <p><strong>Gashgiran</strong> is a Burushaski name from the trade traditions of Gilgit-Baltistan. <em>Gash</em> means selling or trading. <em>Giran</em> is the willow wicker basket mountain communities traditionally used as a trusted unit of measure.</p>
+           <p>Together, they stand for the honest selling of genuine local wealth.</p>
+         </div>
+         <div>
+           <p>We bring the treasures of our high valleys directly to you: hand-woven textiles, regional gemstones, and organic mountain delicacies, each handpicked to celebrate our heritage.</p>
+           <p class="story-origin-quote">Every piece you carry home from Gashgiran is a piece of the mountain, measured with care and shared with pride.</p>
+         </div>
        </div>
-     </div>
+     </section>
 
-     <div class="story-quote card">
-       <span class="quote-mark">“</span>
-       <p>Gashgiran is more than a store. It is an idea that waited for its time.</p>
-     </div>
-
-     <div class="story-grid single">
-       <div class="story-card card">
-         <h3>Today</h3>
-         <p>So, Gashgiran is back.</p>
-         <p>Today, our vision is simple: to bring authentic mountain products from Pakistan closer to you.</p>
-         <p>From natural products and dry fruits to handcrafted goods and meaningful souvenirs, we carefully seek products that have a genuine connection to the places and people behind them.</p>
+     <section class="story-timeline">
+       <div class="story-sectionhead">
+         <h2>How we got here</h2>
+         <h3>An idea that waited for its time.</h3>
        </div>
-     </div>
+       <div class="story-timeline-grid">
+         <article class="story-milestone">
+           <span class="story-year">2019</span>
+           <h3>It started with an idea</h3>
+           <p>While exploring the potential of Gilgit-Baltistan, we imagined a simple way to connect people with the products, traditions, and craftsmanship of Pakistan’s mountains.</p>
+           <p>We pitched the idea to the National Incubator (NI) Pakistan that same year. It was not selected. Due to circumstances at the time, we could not continue, and Gashgiran was put on hold.</p>
+         </article>
+         <article class="story-milestone">
+           <span class="story-year">The years in between</span>
+           <h3>The idea never disappeared</h3>
+           <p>Our journey through tourism brought us closer to mountain communities, farmers, artisans, and local producers.</p>
+           <p>Slowly, we began to see the mountains differently: not only as breathtaking destinations, but as places rich in natural products, traditional craftsmanship, local flavors, and stories.</p>
+         </article>
+         <article class="story-milestone">
+           <span class="story-year">Today</span>
+           <h3>Gashgiran is back</h3>
+           <p>Our vision is simple: to bring authentic mountain products from Pakistan closer to you.</p>
+           <p>Gashgiran is more than a store. It is an idea that waited for its time.</p>
+         </article>
+       </div>
+     </section>
 
-     <div class="story-footer card">
-       <h3>From the mountains of Pakistan to your doorstep.</h3>
-     </div>
+     <div class="story-footer">From the mountains of Pakistan to your doorstep.</div>
+
+     <section class="story-founder">
+       <img class="founder-photo" src="assets/founder.jpeg" alt="Zamir Haider, founder of Gashgiran Souvenir">
+       <div class="founder-copy">
+         <h2>The mind behind Gashgiran</h2>
+         <h3>Zamir Haider</h3>
+         <p class="founder-role">Founder · Gashgiran Souvenir</p>
+         <p>Zamir Haider is an inbound tour expert in Pakistan.</p>
+         <p>In 2019, he founded Gashgiran Souvenir as a new product alongside his tourism venture, reflecting his commitment to promoting local organics and souvenirs.</p>
+         <a class="founder-link" href="https://www.linkedin.com/in/zamirhaider-travelwithzamir/" target="_blank" rel="noopener noreferrer">More about Zamir Haider <span aria-hidden="true">↗</span></a>
+       </div>
+     </section>
    </div>
  </div>`;
 }
@@ -733,28 +758,6 @@ function Policies(){
   <h3>Shipping & Returns</h3><p style="font-size:14px;">Domestic shipping is flat-rate or weight-based depending on region; international shipping is calculated at checkout. Perishable goods (honey, fresh fruit) follow different return terms than dry goods due to shelf-life.</p>
   <h3>Privacy Policy</h3><p style="font-size:14px;">We collect only the information needed to process and deliver your order, and never sell customer data to third parties.</p>
   <h3>Terms of Service</h3><p style="font-size:14px;">By ordering from Gashgiran Souvenir, you agree to our order, payment and delivery terms as outlined at checkout.</p>
- </div>`;
-}
-function AboutUs(){
- return `<div class="container pad" style="max-width:800px;">
-   <h1 style="color:var(--green-deep)">About Us</h1>
-   <p>Gashgiran Souvenir is a small-batch food and gifting brand built around one idea: honest, traceable products straight from the mountains of Hunza, Gilgit-Baltistan — honey, herbs, dried fruit and heritage-inspired gift collections.</p>
-   <p>We work directly with local growers and harvesters, keeping our supply chain short so every jar can be traced back to the orchard or meadow it came from.</p>
-   <div class="mapcard" style="margin:26px 0;">
-     <h4 style="color:#fff">What we stand for</h4>
-     <div class="pin"><span class="leaf">🍃</span> Authenticity — no middlemen, no fillers</div>
-     <div class="pin"><span class="leaf">🍃</span> Traceability — every batch linked to its source</div>
-     <div class="pin"><span class="leaf">🍃</span> Community — fair prices for mountain growers</div>
-   </div>
-   <h2 style="color:var(--green-deep)">Corporate Social Responsibility</h2>
-   <div class="grid reveal" style="grid-template-columns:repeat(3,1fr);">
-     <div class="card"><div class="csricon" style="font-size:30px;">🤝</div><h3 style="font-size:16px;">Fair Grower Partnerships</h3><p style="font-size:13px;color:#555;">We pay Hunza's honey harvesters and orchard families directly and transparently, above traditional middleman rates.</p></div>
-     <div class="card"><div class="csricon" style="font-size:30px;">🌱</div><h3 style="font-size:16px;">Sustainable Sourcing</h3><p style="font-size:13px;color:#555;">Small-batch harvesting practices that protect Hunza's orchards, meadows and highland ecosystems for future seasons.</p></div>
-     <div class="card"><div class="csricon" style="font-size:30px;">📦</div><h3 style="font-size:16px;">Low-Impact Packaging</h3><p style="font-size:13px;color:#555;">Kraft and recyclable packaging wherever possible, minimizing waste across our gift box collections.</p></div>
-     <div class="card"><div class="csricon" style="font-size:30px;">🎓</div><h3 style="font-size:16px;">Community Investment</h3><p style="font-size:13px;color:#555;">A share of proceeds supports skill-building and education initiatives for families in the growing communities we source from.</p></div>
-     <div class="card"><div class="csricon" style="font-size:30px;">📍</div><h3 style="font-size:16px;">Traceability & Trust</h3><p style="font-size:13px;color:#555;">Our "Meet Gashgiran" QR concept lets customers trace a product back to its origin story — accountability built in.</p></div>
-     <div class="card"><div class="csricon" style="font-size:30px;">🏔️</div><h3 style="font-size:16px;">Rooted in Hunza</h3><p style="font-size:13px;color:#555;">Every collection is designed to celebrate — and give back to — the mountain communities that make it possible.</p></div>
-   </div>
  </div>`;
 }
 function Account(){
